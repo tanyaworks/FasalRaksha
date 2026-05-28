@@ -14,7 +14,7 @@ AI-powered crop disease detection for Indian farmers.
 - Gemini AI model for multilingual advice
 
 ## Live Demo
-[View on Netlify](https://heartfelt-panda-760978.netlify.app)
+[View on Netlify](fasalraksha.netlify.app)
 
 ## Setup
 1. Get a free API key from [openrouter.ai](https://openrouter.ai)
