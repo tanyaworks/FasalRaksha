@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FasalRaksha — फसल रक्षा</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --gd: #1a3a1a; --ga: #4a9e4a; --gl: #7ec87e; --gold: #c9a84c; --cr: #f5f0e8; --wh: #ffffff; --tl: #7a9e7a; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Syne',sans-serif; background:var(--gd); color:var(--cr); min-height:100vh; }
+#lang-screen { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; }
+.ls-logo { font-size:3rem; margin-bottom:1rem; }
+.ls-title { font-size:2rem; font-weight:800; margin-bottom:0.4rem; }
+.ls-sub { font-family:'Noto Sans Devanagari',sans-serif; font-size:1.2rem; color:var(--gl); margin-bottom:0.5rem; }
+.ls-desc { font-size:0.85rem; color:var(--tl); margin-bottom:3rem; }
+.ls-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; max-width:700px; width:100%; }
+.ls-btn { background:rgba(45,90,45,0.3); border:1.5px solid rgba(126,200,126,0.2); border-radius:14px; padding:1.5rem 1rem; cursor:pointer; transition:all 0.2s; text-align:center; color:var(--cr); }
+.ls-btn:hover { border-color:var(--ga); background:rgba(74,158,74,0.15); transform:translateY(-2px); }
+.ls-btn .sc { font-size:2rem; display:block; margin-bottom:0.5rem; font-family:'Noto Sans Devanagari',sans-serif; }
+.ls-btn .nm { font-size:0.9rem; font-weight:600; display:block; }
+.ls-btn .nv { font-size:0.75rem; color:var(--gl); display:block; margin-top:2px; font-family:'Noto Sans Devanagari',sans-serif; }
+#app { display:none; }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1rem 2rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(126,200,126,0.1); background:rgba(26,58,26,0.9); backdrop-filter:blur(12px); }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:1rem; font-weight:700; }
+.nav-icon { width:30px; height:30px; background:var(--ga); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+.nav-sub { font-size:0.72rem; color:var(--gl); }
+.nav-btn { font-size:0.7rem; padding:4px 12px; border:1px solid rgba(126,200,126,0.3); border-radius:20px; color:var(--gl); cursor:pointer; background:transparent; }
+.nav-btn:hover { border-color:var(--ga); }
+.hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:6rem 3rem 3rem; gap:4rem; }
+.eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--ga); margin-bottom:1.5rem; font-weight:600; }
+.eyebrow::before { content:''; width:24px; height:1px; background:var(--ga); }
+.hero-title { font-size:clamp(2.5rem,4vw,4rem); font-weight:800; line-height:1.1; margin-bottom:1rem; }
+.hero-desc { font-size:1rem; line-height:1.7; color:rgba(245,240,232,0.7); margin-bottom:2.5rem; max-width:440px; }
+.stats { display:flex; gap:2rem; margin-bottom:2.5rem; }
+.stat { border-left:2px solid var(--ga); padding-left:1rem; }
+.stat-num { font-size:1.6rem; font-weight:800; color:var(--wh); line-height:1; }
+.stat-lbl { font-size:0.72rem; color:var(--tl); margin-top:4px; text-transform:uppercase; letter-spacing:0.08em; }
+.card { background:rgba(45,90,45,0.3); border:1px solid rgba(126,200,126,0.2); border-radius:16px; padding:2rem; backdrop-filter:blur(8px); }
+.lbl { font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gl); margin-bottom:1rem; display:block; }
+.drop { border:2px dashed rgba(126,200,126,0.3); border-radius:12px; padding:3rem 2rem; text-align:center; cursor:pointer; transition:all 0.2s; position:relative; margin-bottom:1.5rem; }
+.drop:hover { border-color:var(--ga); background:rgba(74,158,74,0.08); }
+.drop input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.drop-icon { font-size:3rem; margin-bottom:1rem; display:block; }
+.drop-txt { font-size:1rem; font-weight:600; color:var(--cr); margin-bottom:0.4rem; }
+.drop-sub { font-size:0.8rem; color:var(--tl); }
+.prev-img { width:100%; height:200px; object-fit:cover; border-radius:8px; margin-bottom:1rem; display:none; }
+.abtn { width:100%; padding:14px; background:var(--ga); color:white; border:none; border-radius:8px; font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.abtn:hover:not(:disabled) { background:var(--gl); color:var(--gd); }
+.abtn:disabled { opacity:0.5; cursor:not-allowed; }
+#results { display:none; padding:4rem 3rem; border-top:1px solid rgba(126,200,126,0.1); }
+.rh { text-align:center; margin-bottom:3rem; }
+.eyebrow2 { font-size:0.72rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--ga); margin-bottom:1rem; font-weight:600; display:block; }
+.rt { font-size:2rem; font-weight:800; }
+.rg { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; max-width:1100px; margin:0 auto 2rem; }
+.rc { background:rgba(45,90,45,0.25); border:1px solid rgba(126,200,126,0.15); border-radius:12px; padding:1.5rem; }
+.rc.hi { border-color:var(--ga); background:rgba(74,158,74,0.15); }
+.rcl { font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gl); margin-bottom:0.8rem; }
+.rd { font-size:1.5rem; font-weight:800; color:var(--wh); margin-bottom:0.4rem; }
+.rdl { font-family:'Noto Sans Devanagari',sans-serif; font-size:1.1rem; color:var(--gl); }
+.vb { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:0.78rem; font-weight:600; margin-top:0.8rem; }
+.vs { background:rgba(74,158,74,0.2); color:var(--gl); border:1px solid rgba(74,158,74,0.3); }
+.vw { background:rgba(201,168,76,0.2); color:var(--gold); border:1px solid rgba(201,168,76,0.3); }
+.vl { background:rgba(224,82,82,0.2); color:#e05252; border:1px solid rgba(224,82,82,0.3); }
+.sbt { height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; margin-top:0.8rem; }
+.sbf { height:100%; border-radius:3px; transition:width 1s ease; background:var(--ga); }
+.sbf.warn { background:var(--gold); }
+.sbf.danger { background:#e05252; }
+.ac { max-width:1100px; margin:0 auto 2rem; background:rgba(45,90,45,0.25); border:1px solid rgba(126,200,126,0.15); border-radius:12px; padding:2rem; }
+.at { font-family:'Noto Sans Devanagari',sans-serif; font-size:1.05rem; line-height:1.9; color:var(--cr); white-space:pre-wrap; }
+.at.en { font-family:'Syne',sans-serif; font-size:1rem; line-height:1.7; }
+.rs { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.ri { background:rgba(26,58,26,0.6); border:1px solid rgba(126,200,126,0.1); border-radius:10px; padding:1.2rem; }
+.ri-ic { font-size:1.5rem; margin-bottom:0.5rem; }
+.ri-lb { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--gl); margin-bottom:0.4rem; }
+.ri-vl { font-size:0.95rem; font-weight:600; color:var(--cr); }
+.ri-sb { font-size:0.78rem; color:var(--tl); margin-top:2px; }
+.ov { display:none; position:fixed; inset:0; background:rgba(26,58,26,0.92); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:1.5rem; }
+.ov.show { display:flex; }
+.sp { width:60px; height:60px; border:3px solid rgba(126,200,126,0.2); border-top-color:var(--ga); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.lt { font-size:1rem; color:var(--gl); font-weight:600; }
+footer { border-top:1px solid rgba(126,200,126,0.1); padding:2rem 3rem; display:flex; align-items:center; justify-content:space-between; }
+.ft { font-size:0.78rem; color:var(--tl); }
+.fk { font-size:0.78rem; color:var(--gl); }
+@media(max-width:900px) { .ls-grid { grid-template-columns:repeat(2,1fr); } .hero { grid-template-columns:1fr; padding:5rem 1.5rem 2rem; } .rg,.rs { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="lang-screen">
+  <div class="ls-logo">🌾</div>
+  <div class="ls-title">FasalRaksha</div>
+  <div class="ls-sub">फसल रक्षा</div>
+  <div class="ls-desc">Select your language • अपनी भाषा चुनें</div>
+  <div class="ls-grid">
+    <button class="ls-btn" onclick="setLang('hindi')"><span class="sc">हि</span><span class="nm">Hindi</span><span class="nv">हिंदी</span></button>
+    <button class="ls-btn" onclick="setLang('marathi')"><span class="sc">म</span><span class="nm">Marathi</span><span class="nv">मराठी</span></button>
+    <button class="ls-btn" onclick="setLang('punjabi')"><span class="sc">ਪੰ</span><span class="nm">Punjabi</span><span class="nv">ਪੰਜਾਬੀ</span></button>
+    <button class="ls-btn" onclick="setLang('telugu')"><span class="sc">తె</span><span class="nm">Telugu</span><span class="nv">తెలుగు</span></button>
+    <button class="ls-btn" onclick="setLang('kannada')"><span class="sc">ಕ</span><span class="nm">Kannada</span><span class="nv">ಕನ್ನಡ</span></button>
+    <button class="ls-btn" onclick="setLang('gujarati')"><span class="sc">ગ</span><span class="nm">Gujarati</span><span class="nv">ગુજરાતી</span></button>
+    <button class="ls-btn" onclick="setLang('odia')"><span class="sc">ଓ</span><span class="nm">Odia</span><span class="nv">ଓଡ଼ିଆ</span></button>
+    <button class="ls-btn" onclick="setLang('english')"><span class="sc">A</span><span class="nm">English</span><span class="nv">English</span></button>
+  </div>
+</div>
+<div id="app">
+<nav>
+  <div class="nav-logo">
+    <div class="nav-icon">🌾</div>
+    <div><div>FasalRaksha</div><div class="nav-sub" id="n-sub">फसल रक्षा</div></div>
+  </div>
+  <button class="nav-btn" onclick="changeLang()" id="n-btn">🌐 भाषा बदलें</button>
+</nav>
+<section class="hero">
+  <div>
+    <div class="eyebrow" id="u-ey">AI फसल सुरक्षा</div>
+    <h1 class="hero-title" id="u-ti">अपनी फसल बचाएं</h1>
+    <p class="hero-desc" id="u-de">अपनी फसल की फोटो अपलोड करें। AI बीमारी पहचानेगा और सही इलाज देगा।</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">8+</div><div class="stat-lbl" id="u-s1">भाषाएं</div></div>
+      <div class="stat"><div class="stat-num">30s</div><div class="stat-lbl" id="u-s2">जाँच</div></div>
+      <div class="stat"><div class="stat-num">15+</div><div class="stat-lbl" id="u-s3">बीमारियां</div></div>
+    </div>
+  </div>
+  <div>
+    <div class="card">
+      <span class="lbl" id="u-ul">फसल की जाँच — AI द्वारा</span>
+      <div class="drop" id="dropZone">
+        <input type="file" accept="image/*" onchange="handleFile(this.files[0])">
+        <img class="prev-img" id="prevImg" alt="">
+        <span class="drop-icon" id="dropIcon">🌿</span>
+        <div class="drop-txt" id="u-dt">यहाँ फसल की फोटो डालें</div>
+        <div class="drop-sub" id="u-ds">या क्लिक करें · JPG, PNG</div>
+      </div>
+      <button class="abtn" id="aBtn" onclick="analyze()" disabled id="u-ab">🔬 जाँच करें</button>
+    </div>
+  </div>
+</section>
+<section id="results">
+  <div class="rh">
+    <span class="eyebrow2" id="u-ac">जाँच पूरी हुई</span>
+    <div class="rt" id="u-rt">बीमारी रिपोर्ट</div>
+  </div>
+  <div class="rg">
+    <div class="rc hi">
+      <div class="rcl" id="u-dl">बीमारी पहचानी गई</div>
+      <div class="rd" id="r-dis">—</div>
+      <div class="rdl" id="r-loc">—</div>
+      <div id="r-ver"></div>
+    </div>
+    <div class="rc">
+      <div class="rcl" id="u-sl">गंभीरता</div>
+      <div style="font-size:2.2rem;font-weight:800;color:white" id="r-sev">—</div>
+      <div style="font-size:0.8rem;color:var(--tl);margin-top:4px" id="u-af">फसल प्रभावित</div>
+      <div class="sbt"><div class="sbf" id="r-bar" style="width:0%"></div></div>
+    </div>
+    <div class="rc">
+      <div class="rcl" id="u-cl">विश्वास</div>
+      <div style="font-size:1.4rem;font-weight:800;color:white" id="r-con">—</div>
+      <div style="font-size:0.85rem;color:var(--tl);margin-top:6px" id="r-act">—</div>
+    </div>
+  </div>
+  <div class="ac">
+    <div class="rcl" style="margin-bottom:1rem" id="u-al">इलाज की सलाह</div>
+    <div class="at" id="advTxt">—</div>
+  </div>
+  <div class="rs">
+    <div class="ri"><div class="ri-ic">💊</div><div class="ri-lb" id="u-chl">दवाई</div><div class="ri-vl" id="r-che">—</div></div>
+    <div class="ri"><div class="ri-ic">🌿</div><div class="ri-lb" id="u-orl">जैविक विकल्प</div><div class="ri-vl" id="r-org">—</div></div>
+    <div class="ri"><div class="ri-ic">💰</div><div class="ri-lb" id="u-col">अनुमानित खर्च</div><div class="ri-vl" id="r-pri">—</div><div class="ri-sb" id="u-cos">प्रति छिड़काव</div></div>
+  </div>
+</section>
+<footer>
+  <div class="ft" id="u-ft">FasalRaksha © 2026 — भारतीय किसानों के लिए AI फसल सुरक्षा</div>
+  <div class="fk" id="u-kv">🌾 किसान कॉल सेंटर: 1800-180-1551 (निःशुल्क)</div>
+</footer>
+</div>
+<div class="ov" id="ov">
+  <div class="sp"></div>
+  <div class="lt" id="ov-txt">जाँच हो रही है...</div>
+</div>
+<script>
+const KEY = 'YOUR_API_KEY_HERE';
+const URL = 'https://openrouter.ai/api/v1/chat/completions';
+let lang = 'hindi', file = null, b64 = null;
+
+const T = {
+  hindi:{ sub:'फसल रक्षा',btn:'🌐 भाषा बदलें',ey:'AI फसल सुरक्षा',ti:'अपनी फसल बचाएं',de:'अपनी फसल की फोटो अपलोड करें। AI बीमारी पहचानेगा और सही इलाज देगा।',s1:'भाषाएं',s2:'जाँच',s3:'बीमारियां',ul:'फसल की जाँच — AI द्वारा',dt:'यहाँ फसल की फोटो डालें',ds:'या क्लिक करें · JPG, PNG',ab:'🔬 जाँच करें',ac:'जाँच पूरी हुई',rt:'बीमारी रिपोर्ट',dl:'बीमारी पहचानी गई',sl:'गंभीरता',af:'फसल प्रभावित',cl:'विश्वास',al:'इलाज की सलाह',chl:'दवाई',orl:'जैविक विकल्प',col:'अनुमानित खर्च',cos:'प्रति छिड़काव',ft:'FasalRaksha © 2026 — भारतीय किसानों के लिए AI फसल सुरक्षा',kv:'🌾 किसान कॉल सेंटर: 1800-180-1551 (निःशुल्क)',nt:'✓ इलाज की जरूरत नहीं',tr:'⚡ इलाज जरूरी',vs:'✓ फसल बचाई जा सकती है',vw:'⚠ खतरा — अभी करें',vl:'✗ गंभीर स्थिति',vh:'✓ फसल स्वस्थ है',l1:'फोटो अपलोड हो रही है...',l2:'AI जाँच कर रहा है...',l3:'बीमारी पहचानी जा रही है...',l4:'सलाह तैयार हो रही है...',ln:'Hindi' },
+  marathi:{ sub:'पीक संरक्षण',btn:'🌐 भाषा बदला',ey:'AI पीक संरक्षण',ti:'तुमचे पीक वाचवा',de:'तुमच्या पिकाचा फोटो अपलोड करा. AI रोग ओळखेल आणि योग्य उपचार देईल.',s1:'भाषा',s2:'तपासणी',s3:'रोग',ul:'पीक तपासणी — AI द्वारे',dt:'इथे पिकाचा फोटो टाका',ds:'किंवा क्लिक करा · JPG, PNG',ab:'🔬 तपासा',ac:'तपासणी पूर्ण',rt:'रोग अहवाल',dl:'रोग ओळखला',sl:'तीव्रता',af:'पीक प्रभावित',cl:'विश्वास',al:'उपचाराचा सल्ला',chl:'औषध',orl:'सेंद्रिय पर्याय',col:'अंदाजे खर्च',cos:'प्रति फवारणी',ft:'FasalRaksha © 2026 — भारतीय शेतकऱ्यांसाठी AI पीक संरक्षण',kv:'🌾 किसान कॉल सेंटर: 1800-180-1551 (मोफत)',nt:'✓ उपचाराची गरज नाही',tr:'⚡ उपचार आवश्यक',vs:'✓ पीक वाचवता येईल',vw:'⚠ धोका — आत्ता करा',vl:'✗ गंभीर स्थिती',vh:'✓ पीक निरोगी आहे',l1:'फोटो अपलोड होत आहे...',l2:'AI तपासत आहे...',l3:'रोग ओळखत आहे...',l4:'सल्ला तयार होत आहे...',ln:'Marathi' },
+  punjabi:{ sub:'ਫ਼ਸਲ ਰੱਖਿਆ',btn:'🌐 ਭਾਸ਼ਾ ਬਦਲੋ',ey:'AI ਫ਼ਸਲ ਸੁਰੱਖਿਆ',ti:'ਆਪਣੀ ਫ਼ਸਲ ਬਚਾਓ',de:'ਆਪਣੀ ਫ਼ਸਲ ਦੀ ਫੋਟੋ ਅਪਲੋਡ ਕਰੋ। AI ਬਿਮਾਰੀ ਪਛਾਣੇਗਾ ਅਤੇ ਸਹੀ ਇਲਾਜ ਦੱਸੇਗਾ।',s1:'ਭਾਸ਼ਾਵਾਂ',s2:'ਜਾਂਚ',s3:'ਬਿਮਾਰੀਆਂ',ul:'ਫ਼ਸਲ ਜਾਂਚ — AI ਦੁਆਰਾ',dt:'ਇੱਥੇ ਫ਼ਸਲ ਦੀ ਫੋਟੋ ਪਾਓ',ds:'ਜਾਂ ਕਲਿੱਕ ਕਰੋ · JPG, PNG',ab:'🔬 ਜਾਂਚ ਕਰੋ',ac:'ਜਾਂਚ ਮੁਕੰਮਲ',rt:'ਬਿਮਾਰੀ ਰਿਪੋਰਟ',dl:'ਬਿਮਾਰੀ ਪਛਾਣੀ',sl:'ਗੰਭੀਰਤਾ',af:'ਫ਼ਸਲ ਪ੍ਰਭਾਵਿਤ',cl:'ਭਰੋਸਾ',al:'ਇਲਾਜ ਦੀ ਸਲਾਹ',chl:'ਦਵਾਈ',orl:'ਜੈਵਿਕ ਵਿਕਲਪ',col:'ਅੰਦਾਜ਼ਨ ਖਰਚ',cos:'ਪ੍ਰਤੀ ਛਿੜਕਾਅ',ft:'FasalRaksha © 2026 — ਭਾਰਤੀ ਕਿਸਾਨਾਂ ਲਈ AI ਫ਼ਸਲ ਸੁਰੱਖਿਆ',kv:'🌾 ਕਿਸਾਨ ਕਾਲ ਸੈਂਟਰ: 1800-180-1551 (ਮੁਫ਼ਤ)',nt:'✓ ਇਲਾਜ ਦੀ ਲੋੜ ਨਹੀਂ',tr:'⚡ ਇਲਾਜ ਜ਼ਰੂਰੀ',vs:'✓ ਫ਼ਸਲ ਬਚਾਈ ਜਾ ਸਕਦੀ ਹੈ',vw:'⚠ ਖ਼ਤਰਾ — ਹੁਣੇ ਕਰੋ',vl:'✗ ਗੰਭੀਰ ਸਥਿਤੀ',vh:'✓ ਫ਼ਸਲ ਤੰਦਰੁਸਤ ਹੈ',l1:'ਫੋਟੋ ਅਪਲੋਡ ਹੋ ਰਹੀ ਹੈ...',l2:'AI ਜਾਂਚ ਕਰ ਰਿਹਾ ਹੈ...',l3:'ਬਿਮਾਰੀ ਪਛਾਣੀ ਜਾ ਰਹੀ ਹੈ...',l4:'ਸਲਾਹ ਤਿਆਰ ਹੋ ਰਹੀ ਹੈ...',ln:'Punjabi' },
+  telugu:{ sub:'పంట రక్షణ',btn:'🌐 భాష మార్చు',ey:'AI పంట సంరక్షణ',ti:'మీ పంటను కాపాడండి',de:'మీ పంట ఫోటో అప్‌లోడ్ చేయండి. AI వ్యాధిని గుర్తిస్తుంది మరియు సరైన చికిత్స చెప్తుంది.',s1:'భాషలు',s2:'విశ్లేషణ',s3:'వ్యాధులు',ul:'పంట విశ్లేషణ — AI ద్వారా',dt:'ఇక్కడ పంట ఫోటో వేయండి',ds:'లేదా క్లిక్ చేయండి · JPG, PNG',ab:'🔬 విశ్లేషించు',ac:'విశ్లేషణ పూర్తయింది',rt:'వ్యాధి నివేదిక',dl:'వ్యాధి గుర్తించబడింది',sl:'తీవ్రత',af:'పంట ప్రభావితమైంది',cl:'నమ్మకం',al:'చికిత్స సలహా',chl:'మందు',orl:'సేంద్రీయ ప్రత్యామ్నాయం',col:'అంచనా ఖర్చు',cos:'ప్రతి పిచికారీకి',ft:'FasalRaksha © 2026 — భారతీయ రైతులకు AI పంట సంరక్షణ',kv:'🌾 కిసాన్ కాల్ సెంటర్: 1800-180-1551 (ఉచితం)',nt:'✓ చికిత్స అవసరం లేదు',tr:'⚡ చికిత్స అవసరం',vs:'✓ పంట కాపాడవచ్చు',vw:'⚠ ప్రమాదం — ఇప్పుడే చేయండి',vl:'✗ తీవ్రమైన స్థితి',vh:'✓ పంట ఆరోగ్యంగా ఉంది',l1:'ఫోటో అప్‌లోడ్ అవుతోంది...',l2:'AI పరిశీలిస్తోంది...',l3:'వ్యాధి గుర్తిస్తోంది...',l4:'సలహా తయారవుతోంది...',ln:'Telugu' },
+  kannada:{ sub:'ಬೆಳೆ ರಕ್ಷಣೆ',btn:'🌐 ಭಾಷೆ ಬದಲಿಸಿ',ey:'AI ಬೆಳೆ ಸಂರಕ್ಷಣೆ',ti:'ನಿಮ್ಮ ಬೆಳೆ ಉಳಿಸಿ',de:'ನಿಮ್ಮ ಬೆಳೆಯ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. AI ರೋಗ ಗುರುತಿಸುತ್ತದೆ ಮತ್ತು ಸರಿಯಾದ ಚಿಕಿತ್ಸೆ ತಿಳಿಸುತ್ತದೆ.',s1:'ಭಾಷೆಗಳು',s2:'ವಿಶ್ಲೇಷಣೆ',s3:'ರೋಗಗಳು',ul:'ಬೆಳೆ ವಿಶ್ಲೇಷಣೆ — AI ಮೂಲಕ',dt:'ಇಲ್ಲಿ ಬೆಳೆಯ ಫೋಟೋ ಹಾಕಿ',ds:'ಅಥವಾ ಕ್ಲಿಕ್ ಮಾಡಿ · JPG, PNG',ab:'🔬 ವಿಶ್ಲೇಷಿಸಿ',ac:'ವಿಶ್ಲೇಷಣೆ ಮುಗಿದಿದೆ',rt:'ರೋಗ ವರದಿ',dl:'ರೋಗ ಗುರುತಿಸಲಾಗಿದೆ',sl:'ತೀವ್ರತೆ',af:'ಬೆಳೆ ಪ್ರಭಾವಿತ',cl:'ವಿಶ್ವಾಸ',al:'ಚಿಕಿತ್ಸಾ ಸಲಹೆ',chl:'ಔಷಧ',orl:'ಸಾವಯವ ಪರ್ಯಾಯ',col:'ಅಂದಾಜು ವೆಚ್ಚ',cos:'ಪ್ರತಿ ಸಿಂಪಡಣೆಗೆ',ft:'FasalRaksha © 2026 — ಭಾರತೀಯ ರೈತರಿಗಾಗಿ AI ಬೆಳೆ ಸಂರಕ್ಷಣೆ',kv:'🌾 ಕಿಸಾನ್ ಕಾಲ್ ಸೆಂಟರ್: 1800-180-1551 (ಉಚಿತ)',nt:'✓ ಚಿಕಿತ್ಸೆ ಅಗತ್ಯವಿಲ್ಲ',tr:'⚡ ಚಿಕಿತ್ಸೆ ಅಗತ್ಯ',vs:'✓ ಬೆಳೆ ಉಳಿಸಬಹುದು',vw:'⚠ ಅಪಾಯ — ಈಗಲೇ ಮಾಡಿ',vl:'✗ ತೀವ್ರ ಸ್ಥಿತಿ',vh:'✓ ಬೆಳೆ ಆರೋಗ್ಯಕರ',l1:'ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...',l2:'AI ಪರೀಕ್ಷಿಸುತ್ತಿದೆ...',l3:'ರೋಗ ಗುರುತಿಸಲಾಗುತ್ತಿದೆ...',l4:'ಸಲಹೆ ತಯಾರಾಗುತ್ತಿದೆ...',ln:'Kannada' },
+  gujarati:{ sub:'પાક રક્ષણ',btn:'🌐 ભાષા બદલો',ey:'AI પાક સુરક્ષા',ti:'તમારો પાક બચાવો',de:'તમારા પાકનો ફોટો અપલોડ કરો. AI રોગ ઓળખશે અને યોગ્ય સારવાર જણાવશે.',s1:'ભાષાઓ',s2:'તપાસ',s3:'રોગો',ul:'પાક તપાસ — AI દ્વારા',dt:'અહીં પાકનો ફોટો મૂકો',ds:'અથવા ક્લિક કરો · JPG, PNG',ab:'🔬 તપાસો',ac:'તપાસ પૂર્ણ',rt:'રોગ રિપોર્ટ',dl:'રોગ ઓળખાયો',sl:'તીવ્રતા',af:'પાક અસરગ્રસ્ત',cl:'વિશ્વાસ',al:'સારવારની સલાહ',chl:'દવા',orl:'જૈવિક વિકલ્પ',col:'અંદાજિત ખર્ચ',cos:'પ્રતિ છંટકાવ',ft:'FasalRaksha © 2026 — ભારતીય ખેડૂતો માટે AI પાક સુરક્ષા',kv:'🌾 કિસાન કૉલ સેન્ટર: 1800-180-1551 (મફત)',nt:'✓ સારવારની જરૂર નથી',tr:'⚡ સારવાર જરૂરી',vs:'✓ પાક બચાવી શકાય',vw:'⚠ ખતરો — અત્યારે કરો',vl:'✗ ગંભીર સ્થિતિ',vh:'✓ પાક સ્વસ્થ છે',l1:'ફોટો અપલોડ થઈ રહ્યો છે...',l2:'AI તપાસ કરી રહ્યું છે...',l3:'રોગ ઓળખાઈ રહ્યો છે...',l4:'સલાહ તૈયાર થઈ રહી છે...',ln:'Gujarati' },
+  odia:{ sub:'ଫସଲ ସୁରକ୍ଷା',btn:'🌐 ଭାଷା ବଦଳାନ୍ତୁ',ey:'AI ଫସଲ ସୁରକ୍ଷା',ti:'ଆପଣଙ୍କ ଫସଲ ବଞ୍ଚାନ୍ତୁ',de:'ଆପଣଙ୍କ ଫସଲର ଫଟୋ ଅପଲୋଡ୍ କରନ୍ତୁ। AI ରୋଗ ଚିହ୍ନଟ କରିବ।',s1:'ଭାଷା',s2:'ପରୀକ୍ଷା',s3:'ରୋଗ',ul:'ଫସଲ ପରୀକ୍ଷା — AI ଦ୍ୱାରା',dt:'ଏଠାରେ ଫସଲ ଫଟୋ ରଖନ୍ତୁ',ds:'ବା କ୍ଲିକ୍ କରନ୍ତୁ · JPG, PNG',ab:'🔬 ପରୀକ୍ଷା କରନ୍ତୁ',ac:'ପରୀକ୍ଷା ସମ୍ପୂର୍ଣ୍ଣ',rt:'ରୋଗ ରିପୋର୍ଟ',dl:'ରୋଗ ଚିହ୍ନଟ',sl:'ତୀବ୍ରତା',af:'ଫସଲ ପ୍ରଭାବିତ',cl:'ବିଶ୍ୱାସ',al:'ଚିକିତ୍ସା ପରାମର୍ଶ',chl:'ଔଷଧ',orl:'ଜୈବ ବିକଳ୍ପ',col:'ଆନୁମାନିକ ଖର୍ଚ୍ଚ',cos:'ପ୍ରତି ସ୍ପ୍ରେ',ft:'FasalRaksha © 2026 — ଭାରତୀୟ କୃଷକଙ୍କ ପାଇଁ AI ଫସଲ ସୁରକ୍ଷା',kv:'🌾 କିସାନ କଲ ସେଣ୍ଟର: 1800-180-1551 (ମାଗଣା)',nt:'✓ ଚିକିତ୍ସା ଦରକାର ନାହିଁ',tr:'⚡ ଚିକିତ୍ସା ଆବଶ୍ୟକ',vs:'✓ ଫସଲ ବଞ୍ଚାଇ ହେବ',vw:'⚠ ବିପଦ — ଏବେ କରନ୍ତୁ',vl:'✗ ଗୁରୁତର ଅବସ୍ଥା',vh:'✓ ଫସଲ ସୁସ୍ଥ ଅଛି',l1:'ଫଟୋ ଅପଲୋଡ ହେଉଛି...',l2:'AI ପରୀକ୍ଷା କରୁଛି...',l3:'ରୋଗ ଚିହ୍ନଟ ହେଉଛି...',l4:'ପରାମର୍ଶ ପ୍ରସ୍ତୁତ ହେଉଛି...',ln:'Odia' },
+  english:{ sub:'Crop Protection',btn:'🌐 Change Language',ey:'AI Crop Protection',ti:'Protect Your Harvest',de:'Upload a photo of your crop. AI detects disease and gives exact treatment advice.',s1:'Languages',s2:'Analysis',s3:'Diseases',ul:'Crop Analysis — Powered by AI',dt:'Drop your crop photo here',ds:'or click to browse · JPG, PNG',ab:'🔬 Analyze Crop',ac:'Analysis Complete',rt:'Disease Report',dl:'Disease Identified',sl:'Severity',af:'of crop affected',cl:'Confidence',al:'Treatment Advice',chl:'Recommended Chemical',orl:'Organic Alternative',col:'Estimated Cost',cos:'per spray treatment',ft:'FasalRaksha © 2026 — AI Crop Protection for Indian Farmers',kv:'🌾 Kisan Call Center: 1800-180-1551 (Free)',nt:'✓ No treatment needed',tr:'⚡ Treatment recommended',vs:'✓ Saveable — act in 72hrs',vw:'⚠ At risk — act now',vl:'✗ Critical severity',vh:'✓ Crop is healthy',l1:'Uploading image...',l2:'Running AI vision...',l3:'Detecting disease...',l4:'Generating advice...',ln:'English' }
+};
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('lang-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  applyUI();
+}
+
+function changeLang() {
+  document.getElementById('lang-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+}
+
+function applyUI() {
+  const t = T[lang];
+  document.getElementById('n-sub').textContent = t.sub;
+  document.getElementById('n-btn').textContent = t.btn;
+  document.getElementById('u-ey').textContent = t.ey;
+  document.getElementById('u-ti').textContent = t.ti;
+  document.getElementById('u-de').textContent = t.de;
+  document.getElementById('u-s1').textContent = t.s1;
+  document.getElementById('u-s2').textContent = t.s2;
+  document.getElementById('u-s3').textContent = t.s3;
+  document.getElementById('u-ul').textContent = t.ul;
+  document.getElementById('u-dt').textContent = t.dt;
+  document.getElementById('u-ds').textContent = t.ds;
+  document.getElementById('aBtn').textContent = t.ab;
+  document.getElementById('aBtn').disabled = !b64;
+  document.getElementById('u-ac').textContent = t.ac;
+  document.getElementById('u-rt').textContent = t.rt;
+  document.getElementById('u-dl').textContent = t.dl;
+  document.getElementById('u-sl').textContent = t.sl;
+  document.getElementById('u-af').textContent = t.af;
+  document.getElementById('u-cl').textContent = t.cl;
+  document.getElementById('u-al').textContent = t.al;
+  document.getElementById('u-chl').textContent = t.chl;
+  document.getElementById('u-orl').textContent = t.orl;
+  document.getElementById('u-col').textContent = t.col;
+  document.getElementById('u-cos').textContent = t.cos;
+  document.getElementById('u-ft').textContent = t.ft;
+  document.getElementById('u-kv').textContent = t.kv;
+}
+
+function handleFile(f) {
+  if (!f) return;
+  file = f;
+  const r = new FileReader();
+  r.onload = e => {
+    b64 = e.target.result.split(',')[1];
+    const img = document.getElementById('prevImg');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('dropIcon').style.display = 'none';
+    document.getElementById('u-dt').textContent = f.name;
+    document.getElementById('u-ds').textContent = (f.size/1024).toFixed(0) + 'KB';
+    document.getElementById('aBtn').disabled = false;
+  };
+  r.readAsDataURL(f);
+}
+
+document.getElementById('dropZone').addEventListener('dragover', e => e.preventDefault());
+document.getElementById('dropZone').addEventListener('drop', e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith('image/')) handleFile(f);
+});
+
+async function analyze() {
+  if (!b64) return;
+  const t = T[lang];
+  const ov = document.getElementById('ov');
+  ov.classList.add('show');
+  const steps = [t.l1, t.l2, t.l3, t.l4];
+  let s = 0;
+  const iv = setInterval(() => {
+    if (s < steps.length) document.getElementById('ov-txt').textContent = steps[s++];
+  }, 800);
+
+  try {
+    const prompt = `You are an expert Indian agricultural scientist. Analyze this crop photo.
+Respond ONLY in valid JSON (no markdown):
+{
+  "disease_english": "name in English",
+  "disease_local": "name in ${T[lang].ln} language",
+  "crop": "crop type",
+  "severity_percent": 35,
+  "confidence_percent": 87,
+  "is_healthy": false,
+  "chemical_treatment": "written in ${T[lang].ln} language",
+  "organic_treatment": "written in ${T[lang].ln} language",
+  "estimated_cost": "in INR",
+  "advice": "5-7 sentences entirely in ${T[lang].ln}. Conversational. Include verdict, treatment, timing, end with Kisan Call Center: 1800-180-1551"
+}
+Rules: severity 0-100, confidence 60-99, if healthy is_healthy=true severity=0, ONLY JSON`;
+
+    const res = await fetch(URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${KEY}` },
+      body: JSON.stringify({
+        model: 'openrouter/auto',
+        messages: [{ role: 'user', content: [
+          { type: 'text', text: prompt },
+          { type: 'image_url', image_url: { url: `data:${file.type};base64,${b64}` } }
+        ]}],
+        max_tokens: 1000
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    if (!data.choices?.[0]) throw new Error('No response');
+    const txt = data.choices[0].message.content;
+    const match = txt.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Parse error');
+    const r = JSON.parse(match[0]);
+    clearInterval(iv); ov.classList.remove('show');
+    showResults(r);
+  } catch(err) {
+    clearInterval(iv); ov.classList.remove('show');
+    document.getElementById('advTxt').textContent = 'Error: ' + err.message;
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function showResults(r) {
+  const t = T[lang];
+  const el = document.getElementById('results');
+  el.style.display = 'block';
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+  document.getElementById('r-dis').textContent = r.disease_english || '—';
+  document.getElementById('r-loc').textContent = r.disease_local || '';
+  document.getElementById('r-sev').textContent = r.severity_percent + '%';
+  document.getElementById('r-con').textContent = r.confidence_percent + '%';
+  document.getElementById('r-act').textContent = r.is_healthy ? t.nt : t.tr;
+  const bar = document.getElementById('r-bar');
+  bar.style.width = r.severity_percent + '%';
+  bar.className = 'sbf' + (r.severity_percent > 60 ? ' danger' : r.severity_percent > 35 ? ' warn' : '');
+  const v = document.getElementById('r-ver');
+  if (r.is_healthy) v.innerHTML = `<div class="vb vs">${t.vh}</div>`;
+  else if (r.severity_percent < 40) v.innerHTML = `<div class="vb vs">${t.vs}</div>`;
+  else if (r.severity_percent < 65) v.innerHTML = `<div class="vb vw">${t.vw}</div>`;
+  else v.innerHTML = `<div class="vb vl">${t.vl}</div>`;
+  const at = document.getElementById('advTxt');
+  at.textContent = r.advice || '';
+  at.className = 'at' + (lang === 'english' ? ' en' : '');
+  document.getElementById('r-che').textContent = r.chemical_treatment || '—';
+  document.getElementById('r-org').textContent = r.organic_treatment || '—';
+  document.getElementById('r-pri').textContent = r.estimated_cost || '—';
+}
+</script>
+</body>
+</html>
