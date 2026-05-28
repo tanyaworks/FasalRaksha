@@ -92,6 +92,12 @@ footer { border-top:1px solid rgba(126,200,126,0.1); padding:2rem 3rem; display:
   <div class="ls-title">FasalRaksha</div>
   <div class="ls-sub">फसल रक्षा</div>
   <div class="ls-desc">Select your language • अपनी भाषा चुनें</div>
+  <div style="margin-bottom:1.5rem;width:100%;max-width:500px">
+  <input id="apiKeyInput" type="password" placeholder="Paste your OpenRouter API key (sk-or-v1-...)" 
+  style="width:100%;padding:12px 16px;background:rgba(45,90,45,0.4);border:1px solid rgba(126,200,126,0.3);border-radius:10px;color:#f5f0e8;font-size:0.85rem;outline:none;font-family:monospace"
+  oninput="localStorage.setItem('or_key', this.value)">
+  <div style="font-size:0.72rem;color:#7a9e7a;margin-top:6px">Get a free key at openrouter.ai → Keys</div>
+</div>
   <div class="ls-grid">
     <button class="ls-btn" onclick="setLang('hindi')"><span class="sc">हि</span><span class="nm">Hindi</span><span class="nv">हिंदी</span></button>
     <button class="ls-btn" onclick="setLang('marathi')"><span class="sc">म</span><span class="nm">Marathi</span><span class="nv">मराठी</span></button>
@@ -180,7 +186,7 @@ footer { border-top:1px solid rgba(126,200,126,0.1); padding:2rem 3rem; display:
   <div class="lt" id="ov-txt">जाँच हो रही है...</div>
 </div>
 <script>
-const KEY = 'YOUR_API_KEY_HERE';
+const KEY = localStorage.getItem('or_key') || '';
 const URL = 'https://openrouter.ai/api/v1/chat/completions';
 let lang = 'hindi', file = null, b64 = null;
 
